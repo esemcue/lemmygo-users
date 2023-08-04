@@ -17,12 +17,9 @@ type Config struct {
 	DbURI string `yaml:"dbUri"`
 }
 
-var mongoDb *mongo.Database
+var db *mongo.Database
 
-func GetMongoDb() *mongo.Database {
-	if mongoDb != nil {
-		return mongoDb
-	}
+func main() {
 	serverAPI := options.ServerAPI(options.ServerAPIVersion1)
 	yamlFile, err := os.ReadFile("config.yaml")
 	if err != nil {
@@ -35,18 +32,15 @@ func GetMongoDb() *mongo.Database {
 	if err != nil {
 		panic(err)
 	}
-	mongoDb = client.Database("Likky")
+	db = client.Database("Likky")
 
+	fmt.Println("Pinged your deployment. You successfully connected to MongoDB!")
 	defer func() {
 		if err = client.Disconnect(context.TODO()); err != nil {
 			panic(err)
 		}
 	}()
-	fmt.Println("Pinged your deployment. You successfully connected to MongoDB!")
-	return mongoDb
-}
 
-func main() {
 	lis, err := net.Listen("tcp", ":8081")
 	if err != nil {
 		panic(err)
