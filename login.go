@@ -11,7 +11,7 @@ import (
 type User struct {
 	Name     string `bson:"username"`
 	Password string `bson:"password"`
-	Email    string `bson:"email,omitempty"`
+	Email    string `bson:"_id"`
 }
 
 type mUserServer struct {
@@ -26,7 +26,7 @@ func (s mUserServer) Register(ctx context.Context, req *pb.RegistrationRequest) 
 	}
 	res, err := db.Collection("Users").InsertOne(ctx, newUser)
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
 
 	return &pb.RegistrationResponse{
