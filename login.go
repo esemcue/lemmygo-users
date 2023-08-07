@@ -10,10 +10,17 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-type User struct {
-	Name     string `bson:"username"`
+type lemmyInstance struct {
+	Url      string `bson:"url"`
+	Username string `bson:"username"`
 	Password string `bson:"password"`
-	Email    string `bson:"_id"`
+}
+
+type User struct {
+	Name           string          `bson:"username"`
+	Password       string          `bson:"password"`
+	Email          string          `bson:"_id"`
+	LemmyInstances []lemmyInstance `bson:"lemmyInstances"`
 }
 
 type mUserServer struct {
@@ -27,9 +34,10 @@ func (s mUserServer) Register(ctx context.Context, req *pb.RegistrationRequest) 
 	}
 
 	newUser := User{
-		Name:     req.Name,
-		Password: string(hashed),
-		Email:    req.Email,
+		Name:           req.Name,
+		Password:       string(hashed),
+		Email:          req.Email,
+		LemmyInstances: []lemmyInstance{},
 	}
 	res, err := db.Collection("Users").InsertOne(ctx, newUser)
 	if err != nil {
@@ -47,8 +55,16 @@ func (s mUserServer) Login(ctx context.Context, req *pb.LoginRequest) (*pb.Login
 		return nil, foundResult.Err()
 	}
 
-	spew.Dump(foundResult)
+	var foundUser User
+	foundResult.Decode(&foundUser)
+
+	loginErr := bcrypt.CompareHashAndPassword([]byte(foundUser.Password), []byte(req.Password))
+	if loginErr != nil {
+		return nil, loginErr
+	}
+
+	spew.Dump(foundUser)
 	return &pb.LoginResponse{
-		Message: fmt.Sprintf("Info - %s:%s", req.Name, req.Password),
+		Message: foundUser.Email,
 	}, nil
 }
