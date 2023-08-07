@@ -26,7 +26,10 @@ func main() {
 		panic(err)
 	}
 	var config Config
-	yaml.Unmarshal(yamlFile, &config)
+	configErr := yaml.Unmarshal(yamlFile, &config)
+	if configErr != nil {
+		panic(err)
+	}
 	opts := options.Client().ApplyURI(config.DbURI).SetServerAPIOptions(serverAPI)
 	client, err := mongo.Connect(context.TODO(), opts)
 	if err != nil {
