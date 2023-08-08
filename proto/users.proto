@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-option go_package = "gitlab.com/lemmyGo/lemmyGoAuth/pb";
+option go_package = "gitlab.com/lemmyGo/lemmyGoUsers/proto";
 
 message LoginRequest {
   string name = 1;
