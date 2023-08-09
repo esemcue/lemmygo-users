@@ -11,28 +11,16 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"google.golang.org/grpc"
-	"gopkg.in/yaml.v3"
 )
-
-type Config struct {
-	DbURI string `yaml:"dbUri"`
-}
 
 var db *mongo.Database
 
 func main() {
 	godotenv.Load(".env")
 	serverAPI := options.ServerAPI(options.ServerAPIVersion1)
-	yamlFile, err := os.ReadFile("config.yaml")
-	if err != nil {
-		panic(err)
-	}
-	var config Config
-	configErr := yaml.Unmarshal(yamlFile, &config)
-	if configErr != nil {
-		panic(err)
-	}
-	opts := options.Client().ApplyURI(config.DbURI).SetServerAPIOptions(serverAPI)
+
+	dbUri := os.Getenv("DB_URI")
+	opts := options.Client().ApplyURI(dbUri).SetServerAPIOptions(serverAPI)
 	client, err := mongo.Connect(context.TODO(), opts)
 	if err != nil {
 		panic(err)
