@@ -1,3 +1,4 @@
 config.yaml
 __debug_bin
 lemmyGoUsers
+.env

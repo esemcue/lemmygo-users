@@ -6,6 +6,7 @@ import (
 	"net"
 	"os"
 
+	"github.com/joho/godotenv"
 	pb "gitlab.com/lemmyGo/lemmyGoUsers/proto"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -20,6 +21,7 @@ type Config struct {
 var db *mongo.Database
 
 func main() {
+	godotenv.Load(".env")
 	serverAPI := options.ServerAPI(options.ServerAPIVersion1)
 	yamlFile, err := os.ReadFile("config.yaml")
 	if err != nil {
