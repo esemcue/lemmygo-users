@@ -47,3 +47,10 @@ func main() {
 	}
 
 }
+
+func test ()  {
+  testService := "test"
+  if testService == "test" {
+    fmt.Println("test")
+  }
+}

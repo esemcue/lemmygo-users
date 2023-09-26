@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Pod
+metadata: 
+  name: lemmy-go-users
+  labels: 
+    app: lemmy-go-users
+spec:
+  containers:
+  - name: envoy
+    image: registry.gitlab.com/lemmygo/lemmygousers
+  imagePullSecrets:
+  - name: regcred
