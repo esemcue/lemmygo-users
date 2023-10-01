@@ -6,7 +6,13 @@ metadata:
     app: lemmy-go-users
 spec:
   containers:
-  - name: envoy
+  - name: lemmy-go-users
     image: registry.gitlab.com/lemmygo/lemmygousers
+    env:
+    - name: DB_URI
+      valueFrom:
+        secretKeyRef:
+          name: mongourl
+          key: mongourl
   imagePullSecrets:
   - name: regcred
