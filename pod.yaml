@@ -8,6 +8,8 @@ spec:
   containers:
   - name: lemmy-go-users
     image: registry.gitlab.com/lemmygo/lemmygousers
+    ports:
+    - containerPort: 8081
     env:
     - name: DB_URI
       valueFrom:
