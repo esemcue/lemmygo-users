@@ -18,3 +18,4 @@ spec:
           key: mongourl
   imagePullSecrets:
   - name: regcred
+
