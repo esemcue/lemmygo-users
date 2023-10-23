@@ -23,6 +23,8 @@ spec:
             secretKeyRef:
               name: mongourl
               key: mongourl
+      - name: lemmy-envoy
+        image: registry.gitlab.com/lemmygo/lemmy-envoy
       imagePullSecrets:
       - name: regcred
   selector:
