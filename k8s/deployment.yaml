@@ -5,7 +5,7 @@ metadata:
   labels:
     app: lemmy-go-users
 spec:
-  replicas: 3
+  replicas: 1
   template:
     metadata:
       name: lemmy-go-users
@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: lemmy-go-users
-        image: registry.gitlab.com/lemmygo/lemmygousers
+        image: registry.gitlab.com/lemmygo/lemmygousers:latest
         ports:
         - containerPort: 8081
         env:

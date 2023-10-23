@@ -20,6 +20,7 @@ func main() {
 	serverAPI := options.ServerAPI(options.ServerAPIVersion1)
 
 	dbUri := os.Getenv("DB_URI")
+	fmt.Println(dbUri)
 	opts := options.Client().ApplyURI(dbUri).SetServerAPIOptions(serverAPI)
 	client, err := mongo.Connect(context.TODO(), opts)
 	if err != nil {
@@ -38,6 +39,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+	fmt.Println("Listening on 8081!")
 	serverRegistrar := grpc.NewServer()
 	service := &mUserServer{}
 	pb.RegisterUsersServer(serverRegistrar, service)
