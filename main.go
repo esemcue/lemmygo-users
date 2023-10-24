@@ -47,12 +47,4 @@ func main() {
 	if err != nil {
 		panic(sErr)
 	}
-
-}
-
-func test ()  {
-  testService := "test"
-  if testService == "test" {
-    fmt.Println("test")
-  }
 }
