@@ -5,11 +5,10 @@ metadata:
   labels:
     app: lemmy-go-users
 spec:
-  type: LoadBalancer
+  type: NodePort
   ports:
-    - name: lemmy-envoy-service
-      port: 8080
+    - port: 8080
       targetPort: 8080
-      nodePort: 30080
+      nodePort: 30808
   selector:
     app: lemmy-go-users

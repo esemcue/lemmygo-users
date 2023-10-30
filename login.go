@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 
 	"github.com/davecgh/go-spew/spew"
@@ -64,7 +65,12 @@ func (s mUserServer) Login(ctx context.Context, req *pb.LoginRequest) (*pb.Login
 	}
 
 	spew.Dump(foundUser)
+	bytes, jsonError := json.Marshal(foundUser)
+	if jsonError != nil {
+		return nil, jsonError
+	}
+
 	return &pb.LoginResponse{
-		Message: foundUser.Email,
+		Message: string(bytes),
 	}, nil
 }
