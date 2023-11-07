@@ -18,9 +18,8 @@ type lemmyInstance struct {
 }
 
 type User struct {
-	Name           string          `bson:"username"`
-	Password       string          `bson:"password"`
 	Email          string          `bson:"_id"`
+	Password       string          `bson:"password"`
 	LemmyInstances []lemmyInstance `bson:"lemmyInstances"`
 }
 
@@ -35,7 +34,6 @@ func (s mUserServer) Register(ctx context.Context, req *pb.RegistrationRequest) 
 	}
 
 	newUser := User{
-		Name:           req.Name,
 		Password:       string(hashed),
 		Email:          req.Email,
 		LemmyInstances: []lemmyInstance{},
@@ -46,12 +44,12 @@ func (s mUserServer) Register(ctx context.Context, req *pb.RegistrationRequest) 
 	}
 
 	return &pb.RegistrationResponse{
-		Message: fmt.Sprintf("Info - %s:%s", res.InsertedID, newUser.Name),
+		Message: fmt.Sprintf("Info - %s:%s", res.InsertedID),
 	}, nil
 }
 
 func (s mUserServer) Login(ctx context.Context, req *pb.LoginRequest) (*pb.LoginResponse, error) {
-	foundResult := db.Collection("Users").FindOne(ctx, bson.D{{Key: "username", Value: req.Name}})
+	foundResult := db.Collection("Users").FindOne(ctx, bson.D{{Key: "_id", Value: req.Email}})
 	if foundResult.Err() != nil {
 		return nil, foundResult.Err()
 	}
