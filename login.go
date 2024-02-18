@@ -27,6 +27,7 @@ type mUserServer struct {
 	pb.UnimplementedUsersServer
 }
 
+// TODO split
 func (s mUserServer) Register(ctx context.Context, req *pb.RegistrationRequest) (*pb.RegistrationResponse, error) {
 	hashed, err := bcrypt.GenerateFromPassword([]byte(req.Password), 4)
 	if err != nil {
@@ -51,6 +52,7 @@ func (s mUserServer) Register(ctx context.Context, req *pb.RegistrationRequest) 
 func (s mUserServer) Login(ctx context.Context, req *pb.LoginRequest) (*pb.LoginResponse, error) {
 	foundResult := db.Collection("Users").FindOne(ctx, bson.D{{Key: "_id", Value: req.Email}})
 	if foundResult.Err() != nil {
+		fmt.Printf("User not found: %s\n", req.Email)
 		return nil, foundResult.Err()
 	}
 
@@ -59,6 +61,7 @@ func (s mUserServer) Login(ctx context.Context, req *pb.LoginRequest) (*pb.Login
 
 	loginErr := bcrypt.CompareHashAndPassword([]byte(foundUser.Password), []byte(req.Password))
 	if loginErr != nil {
+		fmt.Printf("Password mismatch for user %s\n", req.Email)
 		return nil, loginErr
 	}
 
