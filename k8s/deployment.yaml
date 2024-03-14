@@ -1,44 +1,44 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: lemmy-go-user
+  name: lemmygo-user
   namespace: lemmygo
   labels:
-    app: lemmy-go-users
+    app: lemmygo-users
 spec:
   replicas: 1
   template:
     metadata:
-      name: lemmy-go-users
+      name: lemmygo-users
       labels:
-        app: lemmy-go-users
+        app: lemmygo-users
     spec:
       containers:
-      - name: lemmy-go-users
-        image: registry.gitlab.com/lemmygo/lemmygousers:latest
-        ports:
-        - containerPort: 8081
-        env:
-        - name: DB_URI
-          valueFrom:
-            secretKeyRef:
-              name: mongourl
-              key: mongourl
-      - name: lemmy-envoy
-        image: registry.gitlab.com/lemmygo/lemmy-envoy
+        - name: lemmygo-users
+          image: registry.gitlab.com/lemmygo/lemmygo-users:latest
+          ports:
+            - containerPort: 8081
+          env:
+            - name: DB_URI
+              valueFrom:
+                secretKeyRef:
+                  name: mongourl
+                  key: mongourl
+        - name: lemmygo-envoy
+          image: registry.gitlab.com/lemmygo/lemmygo-envoy
       imagePullSecrets:
-      - name: regcred
+        - name: regcred
   selector:
     matchLabels:
-      app: lemmy-go-users
+      app: lemmygo-users
 ---
 apiVersion: v1
 kind: Service
-metadata: 
-  name: lemmy-go-users-service
+metadata:
+  name: lemmygo-users-service
   namespace: lemmygo
   labels:
-    app: lemmy-go-users
+    app: lemmygo-users
 spec:
   type: NodePort
   ports:
@@ -46,4 +46,4 @@ spec:
       targetPort: 8080
       nodePort: 30808
   selector:
-    app: lemmy-go-users
+    app: lemmygo-users
