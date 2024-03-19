@@ -25,14 +25,17 @@ type mUserServer struct {
 
 // TODO split
 func (s mUserServer) Register(ctx context.Context, req *pb.RegistrationRequest) (*pb.RegistrationResponse, error) {
-	newUser := User{}
+	newUser := User{
+		Email:    req.Email,
+		Password: req.Password,
+	}
 	res, err := db.Collection("Users").InsertOne(ctx, newUser)
 	if err != nil {
 		return nil, err
 	}
 
 	return &pb.RegistrationResponse{
-		Message: fmt.Sprintf("Info - %s:%s", res.InsertedID),
+		Message: fmt.Sprintf("Info - %s", res.InsertedID),
 	}, nil
 }
 

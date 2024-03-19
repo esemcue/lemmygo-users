@@ -28,7 +28,7 @@ func main() {
 	}
 	db = client.Database("Likky")
 
-	fmt.Println("Pinged your deployment. connected to MongoDB.")
+	fmt.Println("Connected to MongoDB")
 	defer func() {
 		if err = client.Disconnect(context.TODO()); err != nil {
 			panic(err)
