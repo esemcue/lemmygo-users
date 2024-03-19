@@ -41,25 +41,25 @@ func (s mUserServer) Register(ctx context.Context, req *pb.RegistrationRequest) 
 }
 
 func (s mUserServer) Login(ctx context.Context, req *pb.LoginRequest) (*pb.LoginResponse, error) {
-	fmt.Printf("Searching for user: %s\n", req.Email)
+	fmt.Printf("Searching for %s...", req.Email)
 
 	foundResult := db.Collection("Users").FindOne(ctx, bson.D{{Key: "_id", Value: req.Email}})
 	if foundResult.Err() != nil {
-		fmt.Println("User not found!")
+		fmt.Print("User not found! ")
 		return nil, foundResult.Err()
 	}
 
 	var foundUser User
 	foundResult.Decode(&foundUser)
-	fmt.Println("User found.")
+	fmt.Print("User found. Checking password...")
 
 	loginErr := bcrypt.CompareHashAndPassword([]byte(foundUser.Password), []byte(req.Password))
 	if loginErr != nil {
-		fmt.Printf("Password mismatch for user %s\n", req.Email)
+		fmt.Printf("mismatch.")
 		return nil, loginErr
 	}
 
-	fmt.Println("Password matched. Returning")
+	fmt.Println("matched. Returning.")
 	spew.Dump(foundUser)
 
 	bytes, jsonError := json.Marshal(foundUser)
