@@ -25,9 +25,10 @@ type mUserServer struct {
 
 // TODO split
 func (s mUserServer) Register(ctx context.Context, req *pb.RegistrationRequest) (*pb.RegistrationResponse, error) {
+	hashedPass, _ := bcrypt.GenerateFromPassword([]byte(req.Password), 10)
 	newUser := User{
 		Email:    req.Email,
-		Password: req.Password,
+		Password: string(hashedPass),
 	}
 	res, err := db.Collection("Users").InsertOne(ctx, newUser)
 	if err != nil {
@@ -40,16 +41,17 @@ func (s mUserServer) Register(ctx context.Context, req *pb.RegistrationRequest) 
 }
 
 func (s mUserServer) Login(ctx context.Context, req *pb.LoginRequest) (*pb.LoginResponse, error) {
+	fmt.Printf("Searching for user: %s\n", req.Email)
+
 	foundResult := db.Collection("Users").FindOne(ctx, bson.D{{Key: "_id", Value: req.Email}})
 	if foundResult.Err() != nil {
-		fmt.Printf("User not found: %s\n", req.Email)
+		fmt.Println("User not found!")
 		return nil, foundResult.Err()
 	}
 
-	spew.Print(foundResult)
-
 	var foundUser User
 	foundResult.Decode(&foundUser)
+	fmt.Println("User found.")
 
 	loginErr := bcrypt.CompareHashAndPassword([]byte(foundUser.Password), []byte(req.Password))
 	if loginErr != nil {
@@ -57,12 +59,13 @@ func (s mUserServer) Login(ctx context.Context, req *pb.LoginRequest) (*pb.Login
 		return nil, loginErr
 	}
 
+	fmt.Println("Password matched. Returning")
 	spew.Dump(foundUser)
+
 	bytes, jsonError := json.Marshal(foundUser)
 	if jsonError != nil {
 		return nil, jsonError
 	}
-
 	return &pb.LoginResponse{
 		Message: string(bytes),
 	}, nil
