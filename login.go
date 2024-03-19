@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/davecgh/go-spew/spew"
 	pb "gitlab.com/lemmyGo/lemmyGoUsers/proto"
 	"go.mongodb.org/mongo-driver/bson"
 	"golang.org/x/crypto/bcrypt"
@@ -60,13 +59,13 @@ func (s mUserServer) Login(ctx context.Context, req *pb.LoginRequest) (*pb.Login
 	}
 
 	fmt.Print("matched. ")
-	spew.Dump(foundUser)
 
 	bytes, jsonError := json.Marshal(foundUser)
 	if jsonError != nil {
 		return nil, jsonError
 	}
 	fmt.Println("Returning.")
+	fmt.Println(string(bytes))
 	return &pb.LoginResponse{
 		Message: string(bytes),
 	}, nil
