@@ -59,13 +59,14 @@ func (s mUserServer) Login(ctx context.Context, req *pb.LoginRequest) (*pb.Login
 		return nil, loginErr
 	}
 
-	fmt.Println("matched. Returning.")
+	fmt.Print("matched. ")
 	spew.Dump(foundUser)
 
 	bytes, jsonError := json.Marshal(foundUser)
 	if jsonError != nil {
 		return nil, jsonError
 	}
+	fmt.Println("Returning.")
 	return &pb.LoginResponse{
 		Message: string(bytes),
 	}, nil
