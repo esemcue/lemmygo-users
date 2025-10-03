@@ -25,7 +25,9 @@ spec:
                   name: mongourl
                   key: mongourl
         - name: lemmygo-envoy
-          image: registry.gitlab.com/lemmygo/lemmygo-envoy
+          image: registry.gitlab.com/lemmygo/lemmygo-envoy:latest
+          ports:
+            - containerPort: 8080
       imagePullSecrets:
         - name: regcred
   selector:
