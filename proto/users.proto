@@ -17,7 +17,7 @@ message RegistrationRequest {
 
 message RegistrationResponse { string message = 1; }
 
-service Users {
-  rpc Login(LoginRequest) returns (LoginResponse);
-  rpc Register(RegistrationRequest) returns (RegistrationResponse);
+service users {
+  rpc login(LoginRequest) returns (LoginResponse);
+  rpc register(RegistrationRequest) returns (RegistrationResponse);
 }
