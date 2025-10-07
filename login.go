@@ -12,10 +12,15 @@ import (
 
 type credentials map[string]string
 
+type Instance struct {
+	URL         string      `bson:"url" json:"url"`
+	Credentials credentials `bson:"credentials" json:"credentials"`
+}
+
 type User struct {
-	Email     string                 `bson:"_id"`
-	Password  string                 `bson:"password"`
-	Instances map[string]credentials `bson:"instances"`
+	Email     string              `bson:"_id" json:"Email"`
+	Password  string              `bson:"password" json:"Password"`
+	Instances map[string]Instance `bson:"instances" json:"Instances"`
 }
 
 type mUserServer struct {
@@ -26,8 +31,9 @@ type mUserServer struct {
 func (s mUserServer) Register(ctx context.Context, req *pb.RegistrationRequest) (*pb.RegistrationResponse, error) {
 	hashedPass, _ := bcrypt.GenerateFromPassword([]byte(req.Password), 10)
 	newUser := User{
-		Email:    req.Email,
-		Password: string(hashedPass),
+		Email:     req.Email,
+		Password:  string(hashedPass),
+		Instances: make(map[string]Instance), // Initialize empty instances map
 	}
 	res, err := db.Collection("Users").InsertOne(ctx, newUser)
 	if err != nil {
