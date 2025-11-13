@@ -16,6 +16,7 @@ spec:
       containers:
         - name: lemmygo-users
           image: registry.gitlab.com/lemmygo/lemmygo-users:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 8081
           env:
@@ -26,6 +27,7 @@ spec:
                   key: mongourl
         - name: lemmygo-envoy
           image: registry.gitlab.com/lemmygo/lemmygo-envoy:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 8080
       imagePullSecrets:

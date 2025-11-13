@@ -39,6 +39,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+	fmt.Println("Server is starting...")
 	fmt.Println("Listening on 8081!")
 	serverRegistrar := grpc.NewServer()
 	service := &mUserServer{}
